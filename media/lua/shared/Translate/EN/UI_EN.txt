@@ -1,0 +1,6 @@
+UI_EN = {
+  UI_unpack_items_button = "Unpack",
+  UI_unpack_items_button_tooltip = "Unpack everything from container onto the floor or ground"
+  UI_undress_items_button = "Undress",
+  UI_undress_items_button_tooltip = "Undress corpse and place everything onto the floor or ground"
+};
