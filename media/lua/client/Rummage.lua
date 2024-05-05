@@ -3,7 +3,14 @@ require "TimedActions/ISInventoryTransferAction"
 require "ISUI/ISButton"
 
 Rummage = Rummage or {}
-Rummage.DEBUG = false
+Rummage.DEBUG = true
+Rummage.FOUND = Rummage.FOUND or {
+  getText("UI_RUMMAGE_FOUND_1"),
+  getText("UI_RUMMAGE_FOUND_2"),
+  getText("UI_RUMMAGE_FOUND_3"),
+  getText("UI_RUMMAGE_FOUND_4"),
+  getText("UI_RUMMAGE_FOUND_5")
+}
 Rummage.UI = Rummage.UI or {
   getText("UI_unpack_items_button"),
   getText("UI_undress_items_button")
@@ -46,8 +53,12 @@ function Rummage.transfer(playerIndex, container)
   for i = 0, size - 1 do
     local inventoryItem = items:get(i)
     local item = Rummage.getSingleItem(inventoryItem)
-    if Rummage.DEBUG then print("Rummage.transfer: Item = ", tostring(item:getName())) end
-      -- create "timed action" to transfer items (game api)
+    if item:getCategory() == Rummage.AllCat[Rummage.Options.lookFor1] then
+      local say = Rummage.FOUND[ZombRand(#Rummage.FOUND) + 1] .. item:getDisplayName() .. " (" .. (item:getDisplayCategory() or item:getCategory()) .. ")"
+      player:Say(say, 0.70, 0.24, 0.02, UIFont.Dialogue, 0, "default")
+    end
+    
+      -- create "timed action" to transfer items (game api)      
     ISTimedActionQueue.add(ISInventoryTransferAction:new(player, item, item:getContainer(), destination))
   end
 end
@@ -98,11 +109,46 @@ function Rummage.whichText(inventoryType)
 end
 
 -- Should the button shown or hidden
+-- Don't show button if inventory is empty, or if the inventory is the floor or if the "Delete All" button is shown (trash can)
 --
 -- @param self, the ISInventoryPage's self
 -- @return true or false. True, then show button else false, hide the button
 function Rummage.showButton(self)
-  return self.inventory ~= ISInventoryPage.GetFloorContainer(self.player)
+  local inv = self.inventory
+  --if Rummage.DEBUG then print ("showButton: Is empty ", tostring(inv:isEmpty())) end
+  -- Broken up to debug for errors
+  local show = (inv and not inv:isEmpty())
+  --if Rummage.DEBUG then print ("showButton: 1 ", tostring(show)) end
+  if not show then return show end
+  
+  show = show and inv ~= ISInventoryPage.GetFloorContainer(self.player) 
+  --if Rummage.DEBUG then print ("showButton: 2 ", tostring(show)) end
+  if not show then return show end
+  
+  --Stove 
+  if self.toggleStove then
+    show = show and not self.toggleStove:getIsVisible()
+    --if Rummage.DEBUG then print ("showButton: 3 ", tostring(show)) end
+    if not show then return show end
+  end
+  
+  -- trash can
+  if isClient() then
+    show = show and not getServerOptions():getBoolean("TrashDeleteAll")    
+    --if Rummage.DEBUG then print ("showButton: 4 ", tostring(show)) end
+    if not show then return show end
+  end
+  
+	local obj = inv:getParent()
+	if instanceof(obj, "IsoObject") then
+    local sprite = obj:getSprite()
+    if sprite and sprite:getProperties() then
+      show = show and not sprite:getProperties():Is("IsTrashCan")
+    end
+  end
+  
+  --if Rummage.DEBUG then print ("showButton: 5 ", tostring(show)) end
+  return show
 end
 
 -- Create "Unpack" (or "Undress") button on the loot container inventory UI

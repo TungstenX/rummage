@@ -2,5 +2,12 @@ UI_EN = {
   UI_unpack_items_button = "Unpack",
   UI_unpack_items_button_tooltip = "Unpack everything from container onto the floor or ground"
   UI_undress_items_button = "Undress",
-  UI_undress_items_button_tooltip = "Undress corpse and place everything onto the floor or ground"
+  UI_undress_items_button_tooltip = "Undress corpse and place everything onto the floor or ground",
+  UI_RO_LOOK_FOR_1 = "Look for:",
+  UI_RO_LOOK_FOR_1_TT = "Notify when an item of this category is unpack/undressed",
+  UI_RUMMAGE_FOUND_1 = "Oh! Looky here! Found: ",
+  UI_RUMMAGE_FOUND_2 = "Bingo! Found: ",
+  UI_RUMMAGE_FOUND_3 = "Bonus! Found: ",
+  UI_RUMMAGE_FOUND_4 = "What do we have here! Found: ",
+  UI_RUMMAGE_FOUND_5 = "Score! Found: ",
 };

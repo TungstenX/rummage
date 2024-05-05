@@ -2,6 +2,10 @@ name=Rummage
 id=Rummage
 description=Unpack containers and corpses on to the floor/ground
 A button is added in the container inventory pane's title bar. Pressing this button will unpack the contents of the selected container unto to floor, the tile on which the player is standing. The same logic is applied to undressing a corpse.
-
 Now you can make it look like the Rapture happened, when undressing all the corpses (and waiting for them the decay away) ;-)
 poster=poster.png
+modversion=0.1
+authors=TungstenX
+versionMin=41.56
+pzversion=41.56
+require=modoptions
